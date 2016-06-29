@@ -1,0 +1,6 @@
+usr/local/bin/uniqredit-qt usr/bin
+share/pixmaps/uniqredit32.xpm usr/share/pixmaps
+share/pixmaps/uniqredit16.xpm usr/share/pixmaps
+share/pixmaps/uniqredit128.png usr/share/pixmaps
+debian/uniqredit-qt.desktop usr/share/applications
+debian/uniqredit-qt.protocol usr/share/kde4/services/

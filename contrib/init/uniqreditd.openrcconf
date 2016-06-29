@@ -1,0 +1,33 @@
+# /etc/conf.d/uniqreditd: config file for /etc/init.d/uniqreditd
+
+# Config file location
+#UNIQREDITD_CONFIGFILE="/etc/uniqredit/uniqredit.conf"
+
+# What directory to write pidfile to?  (created and owned by $UNIQREDITD_USER)
+#UNIQREDITD_PIDDIR="/var/run/uniqreditd"
+
+# What filename to give the pidfile
+#UNIQREDITD_PIDFILE="${UNIQREDITD_PIDDIR}/uniqreditd.pid"
+
+# Where to write uniqreditd data (be mindful that the blockchain is large)
+#UNIQREDITD_DATADIR="/var/lib/uniqreditd"
+
+# User and group to own uniqreditd process
+#UNIQREDITD_USER="uniqredit"
+#UNIQREDITD_GROUP="uniqredit"
+
+# Path to uniqreditd executable
+#UNIQREDITD_BIN="/usr/bin/uniqreditd"
+
+# Nice value to run uniqreditd under
+#UNIQREDITD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+UNIQREDITD_OPTS="-disablewallet"
+
+# The timeout in seconds OpenRC will wait for uniqreditd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+UNIQREDITD_SIGTERM_TIMEOUT=60

@@ -1,0 +1,8 @@
+/usr/bin/uniqredit-cli		--	gen_context(system_u:object_r:uniqredit_exec_t,s0)
+/usr/sbin/uniqreditd		--	gen_context(system_u:object_r:uniqredit_exec_t,s0)
+/usr/lib(64)?/uniqredit/uniqreditd		--	gen_context(system_u:object_r:uniqredit_exec_t,s0)
+
+/etc/uniqredit(/.*)?		gen_context(system_u:object_r:uniqredit_conf_t,s0)
+/var/lib/uniqredit(/.*)?		gen_context(system_u:object_r:uniqredit_var_lib_t,s0)
+
+(/var)?/run/uniqreditd(/.*)?   gen_context(system_u:object_r:uniqredit_var_run_t,s0)

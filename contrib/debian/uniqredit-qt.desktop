@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Uniqredit
+Comment=Uniqredit P2P Cryptocurrency
+Comment[fr]=Uniqredit, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Uniqredit, eşten eşe kriptografik sanal para birimi
+Exec=uniqredit-qt %u
+Terminal=false
+Type=Application
+Icon=uniqredit128
+MimeType=x-scheme-handler/uniqredit;
+Categories=Office;Finance;

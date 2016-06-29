@@ -1,0 +1,11 @@
+[Protocol]
+exec=uniqredit-qt '%u'
+protocol=uniqredit
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false

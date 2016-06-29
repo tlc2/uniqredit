@@ -1,0 +1,5 @@
+Building Uniqredit
+
+See doc/build-*.md for instructions on building uniqreditd,
+the intended-for-services, no-graphical-interface, reference
+implementation of Uniqredit.

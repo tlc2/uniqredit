@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  uniqreditd The uniqredit core server.
+#
+#
+# chkconfig: 345 80 20
+# description: uniqreditd
+# processname: uniqreditd
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/uniqreditd, see below
+if [ -f /etc/sysconfig/uniqreditd ]; then
+        . /etc/sysconfig/uniqreditd
+fi
+
+RETVAL=0
+
+prog=uniqreditd
+# you can override the lockfile via UNIQREDITD_LOCKFILE in /etc/sysconfig/uniqreditd
+lockfile=${UNIQREDITD_LOCKFILE-/var/lock/subsys/uniqreditd}
+
+# uniqreditd defaults to /usr/bin/uniqreditd, override with UNIQREDITD_BIN
+uniqreditd=${UNIQREDITD_BIN-/usr/bin/uniqreditd}
+
+# uniqreditd opts default to -disablewallet, override with UNIQREDITD_OPTS
+uniqreditd_opts=${UNIQREDITD_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $uniqreditd $uniqreditd_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

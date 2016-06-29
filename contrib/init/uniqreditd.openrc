@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/uniqredit/.uniqredit" ]; then
+	UNIQREDITD_DEFAULT_DATADIR="/var/lib/uniqredit/.uniqredit"
+else
+	UNIQREDITD_DEFAULT_DATADIR="/var/lib/uniqreditd"
+fi
+
+UNIQREDITD_CONFIGFILE=${UNIQREDITD_CONFIGFILE:-/etc/uniqredit/uniqredit.conf}
+UNIQREDITD_PIDDIR=${UNIQREDITD_PIDDIR:-/var/run/uniqreditd}
+UNIQREDITD_PIDFILE=${UNIQREDITD_PIDFILE:-${UNIQREDITD_PIDDIR}/uniqreditd.pid}
+UNIQREDITD_DATADIR=${UNIQREDITD_DATADIR:-${UNIQREDITD_DEFAULT_DATADIR}}
+UNIQREDITD_USER=${UNIQREDITD_USER:-${UNIQREDIT_USER:-uniqredit}}
+UNIQREDITD_GROUP=${UNIQREDITD_GROUP:-uniqredit}
+UNIQREDITD_BIN=${UNIQREDITD_BIN:-/usr/bin/uniqreditd}
+UNIQREDITD_NICE=${UNIQREDITD_NICE:-${NICELEVEL:-0}}
+UNIQREDITD_OPTS="${UNIQREDITD_OPTS:-${UNIQREDIT_OPTS}}"
+
+name="Uniqredit Core Daemon"
+description="Uniqredit cryptocurrency P2P network daemon"
+
+command="/usr/bin/uniqreditd"
+command_args="-pid=\"${UNIQREDITD_PIDFILE}\" \
+		-conf=\"${UNIQREDITD_CONFIGFILE}\" \
+		-datadir=\"${UNIQREDITD_DATADIR}\" \
+		-daemon \
+		${UNIQREDITD_OPTS}"
+
+required_files="${UNIQREDITD_CONFIGFILE}"
+start_stop_daemon_args="-u ${UNIQREDITD_USER} \
+			-N ${UNIQREDITD_NICE} -w 2000"
+pidfile="${UNIQREDITD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${UNIQREDITD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${UNIQREDITD_USER}:${UNIQREDITD_GROUP}" \
+	"${UNIQREDITD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${UNIQREDITD_USER}:${UNIQREDITD_GROUP}" \
+	"${UNIQREDITD_PIDDIR}"
+
+	checkpath -f \
+	-o ${UNIQREDITD_USER}:${UNIQREDITD_GROUP} \
+	-m 0660 \
+	${UNIQREDITD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${UNIQREDITD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run uniqreditd."
+		eerror "The setting must appear in ${UNIQREDITD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Uniqredit Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}
