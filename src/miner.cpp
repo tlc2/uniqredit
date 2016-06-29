@@ -154,7 +154,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		}
 
 		for(balit = bidtracker.begin(); balit != bidtracker.end();balit++){
-			CUniqreditAddress address(convertAddress(balit->first.c_str(),25));
+			CUniqreditAddress address(convertAddress(balit->first.c_str(),68));
 			CTxDestination dest = address.Get();
 			txNew.vout[i].scriptPubKey= GetScriptForDestination(dest);
 			i++;
@@ -165,7 +165,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         if (bidtracker.size()>0){
 	        int i = 2;
 		    for(balit = bidtracker.begin(); balit != bidtracker.end();balit++){
-			    CUniqreditAddress address(convertAddress(balit->first.c_str(),0x19));
+			    CUniqreditAddress address(convertAddress(balit->first.c_str(),68));
 			    CTxDestination dest = address.Get();
 			    txNew.vout[i].scriptPubKey= GetScriptForDestination(dest);
 			    i++;
