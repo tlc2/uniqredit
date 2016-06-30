@@ -35,7 +35,7 @@
 #define DEST_IP "192.52.166.220"
 
 #ifdef WIN32
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
 #define bcopy(b1,b2,len) (memmove((b2), (b1), (len)), (void) 0)
 #endif
 
@@ -105,69 +105,74 @@ void CLoanManager::getverifieddata()
 	myfile.close();
 
 }
-/*
-bool CLoanManager::senddata(string data)
+
+string CLoanManager::senddata(string data)
 {
-    int sockfd, portno, n;
+    int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
 
     char buffer[256];
 
-    portno = PORT;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) 
+    if (sockfd < 0)
         LogPrintf("ERROR opening socket");
     server = gethostbyname(DEST_IP);
 
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr,(char *)&serv_addr.sin_addr.s_addr, server->h_length);
-    serv_addr.sin_port = htons(portno);
-    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
+    serv_addr.sin_port = htons(PORT);
+
+    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         LogPrintf("ERROR connecting\n");
+
     bzero(buffer,256);
-    //fgets(buffer,255,data.c_str());
+
     std::memcpy(buffer, data.c_str(), data.size() + 1);
+
     n = write(sockfd,buffer,strlen(buffer));
-    if (n < 0) 
+
+    if (n < 0)
          LogPrintf("ERROR writing to socket\n");
+
     bzero(buffer,256);
+
     n = read(sockfd,buffer,255);
-    if (n < 0) 
+
+    if (n < 0)
          LogPrintf("ERROR reading from socket\n");
-    LogPrintf("%s\n",buffer);
+
     close(sockfd);
-    return true;
+
+    string result(buffer);
+
+	return result;
+
 }
 
-*/
-
-void CLoanManager::process_conn_client(int s,string d){
+/*
+string CLoanManager::process_conn_client(int s,string d){
 
     ssize_t size = 0;
-    const char *buffer[256] = {d.c_str()};
+    char buffer[256];
+    strcpy(buffer, d.c_str());
 
     write(s,buffer,256);
-    size = read(s, buffer, 256);
 
-    LogPrintf("CLoanManager::process_conn_client request is %s  and size is %d bytes!\n",d , d.size());
-    
-    if(size == 0){
-		LogPrintf("CLoanManager::process_conn_client empty string??  !\n");
-    }
-    
-    //write to the server
-    write(s,buffer,size);
     LogPrintf("CLoanManager::process_conn_client sent %s !\n", d);
-    
+
     //get response from the server
     size=read(s,buffer,256);
-    write(1,buffer,size);
+    //write(1,buffer,size);
+
+    string result(buffer);
+
+	return result;
 
 }
 
-bool CLoanManager::senddata(string data){
+string CLoanManager::senddata(string data){
 
     int s;
     struct sockaddr_in server_addr;
@@ -176,25 +181,22 @@ bool CLoanManager::senddata(string data){
     server_addr.sin_addr.s_addr = inet_addr(DEST_IP);
     server_addr.sin_port =  htons(PORT);
     s = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if(s < 0){        
+
+    if(s < 0){
         LogPrintf("CLoanManager::senddata [process info]socket error  !\n");
-        return false;
+        return "Socket Error";
     }
     LogPrintf("CLoanManager::senddata [process info] socket built successfully  !\n");
 
-    //inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
-
     if (connect(s, (struct sockaddr*)&server_addr, sizeof(struct sockaddr)) < 0){
         LogPrintf("ERROR connecting\n");
-        return false;
+        return "Unable to connect, server likely down for maintanance";
 	}
-    
-    //LogPrintf("CLoanManager::senddata [process infor] connected  !\n");
 
-    process_conn_client(s,data);
+    string result = process_conn_client(s,data);
 
     close(s);
 
-    return true;
+    return result;
 }
+*/

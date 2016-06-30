@@ -20,7 +20,7 @@
 #include "wallet/rpcwallet.h"
 #endif
 
-#define SERVER "B5C6Gci8ha6DcNizQvRsWj8oFMdgNKQVQx"
+#define SERVER "UMzP1cQjT8Fyo65y7KGpJAwHykGxFBB4dq"
 
 #include <stdint.h>
 
@@ -292,7 +292,7 @@ UniValue vote(const UniValue& params, bool fHelp)
 	int option  = params[2].get_int();
 	std::stringstream raw;
 	raw<<"vote"<<'&'<<strAddress<<','<<topic<<','<<option<<','<<tx<<endl;
-	
+
 	string request = raw.str();
     return loanmgr.senddata(request);
 
@@ -305,7 +305,7 @@ static const CRPCCommand commands[] =
     { "loan",               "loanfunds",              &loanfunds,              true  },
     { "loan",               "registeraddress",        &registeraddress,        true  },
     { "loan",               "reportloandefault",      &reportloandefault,      true  },
-    
+
     { "vote",               "createnewvote",          &createnewvote,          true  },
     { "vote",               "vote",                   &vote,                   true  },
 

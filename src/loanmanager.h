@@ -21,8 +21,8 @@ public:
     CURLcode res;
     CURL *curl;
 	void getverifieddata();
-	void process_conn_client(int s,string d);
-	bool senddata(string data);
+	//string process_conn_client(int s,string d);
+	string senddata(string data);
 	void getcreditratings();
 };
 
