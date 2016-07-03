@@ -54,7 +54,7 @@ UniValue createloanrequest(const UniValue& params, bool fHelp)
     LOCK2(cs_main, pwalletMain->cs_wallet);
 	string strAddress  = params[0].get_str();
     int64_t amount     = params[1].get_int64();
-    int premium  = params[2].get_real();
+    double premium  = params[2].get_real();
     int expiry = params[3].get_int();
     int period  = params[4].get_int();
     string message  = params[5].get_str();
