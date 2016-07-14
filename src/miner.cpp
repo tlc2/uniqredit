@@ -237,8 +237,12 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 	}
 
 	coinbaseTx.vout[0].nValue = 0.001 * COIN + nFees;
-	coinbaseTx.vout[1].nValue = 0.999 * COIN;
-
+    if(chainActive.Tip()->nHeight==690){	
+	coinbaseTx.vout[1].nValue = 3200000 * COIN;
+	}
+	else{
+		coinbaseTx.vout[1].nValue = 0.99900004 * COIN;
+	}
     unsigned long int py = 4 * COIN;
 	int j=2;
 	for(dallit = donors.begin(); dallit != donors.end();dallit++){
