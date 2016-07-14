@@ -55,6 +55,7 @@
 //#include <QStatusBar>
 #include <QStyle>
 #include <QTimer>
+#include <QTime>
 #include <QToolBar>
 #include <QVBoxLayout>
 
@@ -185,7 +186,7 @@ UniqreditGUI::UniqreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // logo - we'll make it a button that leads back to the overviewpage menu
     Logo = new QPushButton(this);
-    Logo->move(10, 30);
+    Logo->move(10, 20);
     Logo->setFixedWidth(250);
     Logo->setFixedHeight(80);
     Logo->setObjectName("Logo");
@@ -193,8 +194,8 @@ UniqreditGUI::UniqreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // balance frame
     bframe = new QFrame(this);
-    bframe->move(250, 30);
-    bframe->setFixedWidth(590);
+    bframe->move(240, 20);
+    bframe->setFixedWidth(600);
     bframe->setFixedHeight(80);
     bframe->setObjectName("bframe");    
 
@@ -217,7 +218,7 @@ UniqreditGUI::UniqreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     // fancy new html label with smaller post-decimal-point digits
     labelSplit = new QLabel(bframe);
     labelSplit->move (10, 25);
-    labelSplit->setFixedWidth(520);
+    labelSplit->setFixedWidth(530);
     labelSplit->setFixedHeight(30);
     labelSplit->sizeHint();
     labelSplit->setAlignment(Qt::AlignCenter);
@@ -484,8 +485,21 @@ void UniqreditGUI::splitBalance()
     QStringList chunks = this->labelHeaderBalance->text().split(".");
     QString integer = chunks.at(0);
     QString decimal = chunks.at(1);
-    QString joined = ("<span style='font-size:16pt; color:#232323;'>Available Balance: " + integer + "</span><span style='font-size:12pt; color:#232323;'>." + decimal + "</span>");
+    QString joined = ("<span style='font-size:12pt; color:#232323;'>Available Balance: <span style='font-size:16pt; color:#232323;'>" + integer + "</span><span style='font-size:12pt; color:#232323;'>." + decimal + "</span>");
     this->labelSplit->setText(joined);
+     //blingit();
+    QString blinged = ("<span style='font-size:12pt; color:#232323;'>Available Balance: <span style='font-size:16pt; color:#36b452;'>" + integer + "</span><span style='font-size:12pt; color:#36b452;'>." + decimal + "</span>");
+    this->labelSplit->setText(blinged);
+    delay();
+    QString deblinged = ("<span style='font-size:12pt; color:#232323;'>Available Balance: <span style='font-size:16pt; color:#232323;'>" + integer + "</span><span style='font-size:12pt; color:#232323;'>." + decimal + "</span>");
+    this->labelSplit->setText(deblinged);
+}
+
+void UniqreditGUI::delay()
+{
+    QTime dieTime= QTime::currentTime().addMSecs(2000);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void UniqreditGUI::enc()
@@ -634,7 +648,7 @@ void UniqreditGUI::createToolBars()
         bbcrstatstab = new QPushButton(uands);
         bbcrstatstab->setFixedHeight(25);
         bbcrstatstab->setFixedWidth(207);
-        bbcrstatstab->move(0,0);
+        bbcrstatstab->move(624,0);
         bbcrstatstab->setText("UNIQ Network Stats");
         bbcrstatstab->setObjectName("bbcrstatstab");
         bbcrstatstab->setCheckable(true);
@@ -664,8 +678,8 @@ void UniqreditGUI::createToolBars()
         bothertab = new QPushButton(uands);
         bothertab->setFixedHeight(25);
         bothertab->setFixedWidth(206);
-        bothertab->move(624, 0);
-        bothertab->setText("Other Stuff");
+        bothertab->move(0, 0);
+        bothertab->setText("Wallet Utilities");
         bothertab->setObjectName("bothertab");
         bothertab->setCheckable(true);
         bothertab->setObjectName("bothertab");
@@ -686,8 +700,8 @@ void UniqreditGUI::setClientModel(ClientModel *clientModel)
         setNumConnections(clientModel->getNumConnections());
         connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
-        setNumBlocks(clientModel->getNumBlocks(), clientModel->getLastBlockDate(), clientModel->getVerificationProgress(NULL));
-        connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(setNumBlocks(int,QDateTime,double)));
+        setNumBlocks(clientModel->getNumBlocks(), clientModel->getLastBlockDate(), clientModel->getVerificationProgress(NULL), false);
+        connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)));
@@ -877,16 +891,14 @@ void UniqreditGUI::gotoOverviewPage()
 
 void UniqreditGUI::gotoHistoryPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-history');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-history');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoHistoryPage();
     bover->show();
 }
 
 void UniqreditGUI::gotoReceiveCoinsPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-receive');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-receive');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
     bover->show();
     brectab->setChecked(true);
@@ -895,8 +907,7 @@ void UniqreditGUI::gotoReceiveCoinsPage()
 
 void UniqreditGUI::gotoSendCoinsPage(QString addr)
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-send');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-send');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     bover->show();
     sendrec->show();
@@ -906,16 +917,14 @@ void UniqreditGUI::gotoSendCoinsPage(QString addr)
 
 void UniqreditGUI::gotoBidPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-bid');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-bid');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoBidPage();
     bover->show();
 }
 
 void UniqreditGUI::gotoP2PPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-p2p');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-p2p');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoP2PPage();
     p2p->show();
     bover->show();
@@ -925,8 +934,7 @@ void UniqreditGUI::gotoP2PPage()
 
 void UniqreditGUI::gotoP2PLPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-p2p');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-p2p');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoP2PLPage();
     p2p->show();
     bover->show();
@@ -936,16 +944,14 @@ void UniqreditGUI::gotoP2PLPage()
 
 void UniqreditGUI::gotoAssetsPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-assets');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-assets');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoAssetsPage();
     bover->show();
 }
 
 void UniqreditGUI::gotoUtilitiesPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-finstats');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-finstats');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoUtilitiesPage();
     bover->show();
     uands->show();
@@ -957,8 +963,7 @@ void UniqreditGUI::gotoUtilitiesPage()
 
 void UniqreditGUI::gotoBlockExplorerPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-explorer');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-explorer');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoBlockExplorerPage();
     bover->show();
     uands->show();
@@ -970,8 +975,7 @@ void UniqreditGUI::gotoBlockExplorerPage()
 
 void UniqreditGUI::gotoExchangeBrowserPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-market');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-market');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoExchangeBrowserPage();
     bover->show();
     uands->show();
@@ -983,8 +987,7 @@ void UniqreditGUI::gotoExchangeBrowserPage()
 
 void UniqreditGUI::gotoOtherPage()
 {
-    //Logo->setStyleSheet("background-image: url(':css/logo-other');");
-    //Logo->setStyleSheet("QPushButton{background-image: url(':css/logo-other');}" "QPushButton:hover{background-image: url(':css/logo');}");
+    Logo->setStyleSheet("QPushButton:hover{background-image: url(':css/logo-menu');}");
     if (walletFrame) walletFrame->gotoOtherPage();
     bover->show();
     uands->show();
@@ -1022,7 +1025,7 @@ void UniqreditGUI::setNumConnections(int count)
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Uniqredit network", "", count));
 }
 
-void UniqreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress)
+void UniqreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
     if(!clientModel)
         return;
@@ -1034,15 +1037,25 @@ void UniqreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
     enum BlockSource blockSource = clientModel->getBlockSource();
     switch (blockSource) {
         case BLOCK_SOURCE_NETWORK:
+            if (header) {
+                return;
+            }
             progressBarLabel->setText(tr("Synchronizing with network..."));
             break;
         case BLOCK_SOURCE_DISK:
-            progressBarLabel->setText(tr("Importing blocks from disk..."));
+            if (header) {
+                progressBarLabel->setText(tr("Indexing blocks on disk..."));
+            } else {
+                progressBarLabel->setText(tr("Processing blocks on disk..."));
+            }
             break;
         case BLOCK_SOURCE_REINDEX:
             progressBarLabel->setText(tr("Reindexing blocks on disk..."));
             break;
         case BLOCK_SOURCE_NONE:
+            if (header) {
+                return;
+            }
             // Case: not Importing, not Reindexing and no network connection
             progressBarLabel->setText(tr("No block source available..."));
             break;
@@ -1059,7 +1072,7 @@ void UniqreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
     if(secs < 90*60)
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
-        labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(18, 18));
+        labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
 #ifdef ENABLE_WALLET
         if(walletFrame)
@@ -1107,7 +1120,7 @@ void UniqreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
         {
             labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(QString(
                 ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
-                .pixmap(18, 18));
+                .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
             spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES;
         }
         prevBlocks = count;
@@ -1227,6 +1240,14 @@ void UniqreditGUI::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
+void UniqreditGUI::showEvent(QShowEvent *event)
+{
+    // enable the debug window when the main window shows up
+    openRPCConsoleAction->setEnabled(true);
+    aboutAction->setEnabled(true);
+    optionsAction->setEnabled(true);
+}
+
 #ifdef ENABLE_WALLET
 void UniqreditGUI::incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label)
 {
@@ -1299,7 +1320,7 @@ void UniqreditGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Unlocked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(18,18));
+        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1307,7 +1328,7 @@ void UniqreditGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Locked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(18,18));
+        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1380,6 +1401,14 @@ void UniqreditGUI::showProgress(const QString &title, int nProgress)
         progressDialog->setValue(nProgress);
 }
 
+void UniqreditGUI::setTrayIconVisible(bool fHideTrayIcon)
+{
+    if (trayIcon)
+    {
+        trayIcon->setVisible(!fHideTrayIcon);
+    }
+}
+
 static bool ThreadSafeMessageBox(UniqreditGUI *gui, const std::string& message, const std::string& caption, unsigned int style)
 {
     bool modal = (style & CClientUIInterface::MODAL);
@@ -1420,3 +1449,76 @@ void UniqreditGUI::mouseMoveEvent(QMouseEvent *event)
     move(event->globalX() - m_nMouseClick_X_Coordinate, event->globalY() - m_nMouseClick_Y_Coordinate);
 }
 
+UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
+    optionsModel(0),
+    menu(0)
+{
+    createContextMenu();
+    setToolTip(tr("Unit to show amounts in. Click to select another unit."));
+    QList<UniqreditUnits::Unit> units = UniqreditUnits::availableUnits();
+    int max_width = 0;
+    const QFontMetrics fm(font());
+    Q_FOREACH (const UniqreditUnits::Unit unit, units)
+    {
+        max_width = qMax(max_width, fm.width(UniqreditUnits::name(unit)));
+    }
+    setMinimumSize(max_width, 0);
+    setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    setStyleSheet(QString("QLabel { color : %1 }").arg(platformStyle->SingleColor().name()));
+}
+
+/** So that it responds to button clicks */
+void UnitDisplayStatusBarControl::mousePressEvent(QMouseEvent *event)
+{
+    onDisplayUnitsClicked(event->pos());
+}
+
+/** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
+void UnitDisplayStatusBarControl::createContextMenu()
+{
+    menu = new QMenu();
+    Q_FOREACH(UniqreditUnits::Unit u, UniqreditUnits::availableUnits())
+    {
+        QAction *menuAction = new QAction(QString(UniqreditUnits::name(u)), this);
+        menuAction->setData(QVariant(u));
+        menu->addAction(menuAction);
+    }
+    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(onMenuSelection(QAction*)));
+}
+
+/** Lets the control know about the Options Model (and its signals) */
+void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel *optionsModel)
+{
+    if (optionsModel)
+    {
+        this->optionsModel = optionsModel;
+
+        // be aware of a display unit change reported by the OptionsModel object.
+        connect(optionsModel,SIGNAL(displayUnitChanged(int)),this,SLOT(updateDisplayUnit(int)));
+
+        // initialize the display units label with the current value in the model.
+        updateDisplayUnit(optionsModel->getDisplayUnit());
+    }
+}
+
+/** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
+void UnitDisplayStatusBarControl::updateDisplayUnit(int newUnits)
+{
+    setText(UniqreditUnits::name(newUnits));
+}
+
+/** Shows context menu with Display Unit options by the mouse coordinates */
+void UnitDisplayStatusBarControl::onDisplayUnitsClicked(const QPoint& point)
+{
+    QPoint globalPos = mapToGlobal(point);
+    menu->exec(globalPos);
+}
+
+/** Tells underlying optionsModel to update its current display unit. */
+void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
+{
+    if (action)
+    {
+        optionsModel->setDisplayUnit(action->data());
+    }
+}

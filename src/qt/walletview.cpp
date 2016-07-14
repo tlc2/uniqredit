@@ -127,7 +127,7 @@ void WalletView::setUniqreditGUI(UniqreditGUI *gui)
         connect(overviewPage, SIGNAL(bborrowclicked()), gui, SLOT(gotoP2PPage()));
         connect(overviewPage, SIGNAL(blendclicked()), gui, SLOT(gotoP2PLPage()));
         connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
-        connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
+        connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoOtherPage()));
         
         // connect signals from otherpage to uniqreditgui slots to call menu actions
         connect(otherPage, SIGNAL(bURIclicked()), gui, SLOT(openClicked()));
@@ -141,6 +141,7 @@ void WalletView::setUniqreditGUI(UniqreditGUI *gui)
         connect(otherPage, SIGNAL(bOptionsclicked()), gui, SLOT(optionsClicked()));
         connect(otherPage, SIGNAL(bRPCclicked()), gui, SLOT(showDebugWindowActivateConsole()));
         connect(otherPage, SIGNAL(bHelpclicked()), gui, SLOT(showHelpMessageClicked()));
+        connect(otherPage, SIGNAL(bBlocksharesclicked()), gui, SLOT(gotoBidPage()));
         
 
         // Clicking on a transaction on the overview page simply sends you to transaction history page

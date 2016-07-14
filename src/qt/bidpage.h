@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QProcess>
+#include <QNetworkAccessManager>
 
 
 namespace Ui
@@ -40,18 +41,18 @@ private:
     QProcess *procsched;
     QProcess *procsched2;    
     
-    QTimer *electrumtimer;
+    QNetworkAccessManager *manager;
+    QNetworkAccessManager *manager2;
 
 private Q_SLOTS:
-    void SummonElectrum();   
     void SummonBTCExplorer(); 
     void GetBids();
-    void setNumBlocks(int count);
-    int getNumBlocks();
-    void Estimate();
     void RPC();
-    void scheduleBid();
-    void callElectrumDaemon();
+    void sendRequests();
+    void sendRequest();
+    void replyFinished(QNetworkReply *reply);
+    void sendRequest2();
+    void replyFinished2(QNetworkReply *reply2);
     
     bool fileExists(QString path);
 

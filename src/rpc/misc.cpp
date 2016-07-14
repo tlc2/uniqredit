@@ -159,41 +159,6 @@ public:
 };
 #endif
 
-UniValue getbids(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() != 0)
-        throw runtime_error(
-            "getbids\n"
-            "Returns an object containing information about existing real-time bids\n"
-            "This should be used for debugging/confirmation purposes only; this is a resource intensive\n"
-            "operation and may slow down wallet operation, especially on slow internet connections.\n"
-            "Warning, Result is an object with Pubkey hashes depicting originating address\n"
-            "for the corresponding receiving addresses, use \"getblocktemplate\".\n"
-            "\nExamples:\n"
-            + HelpExampleCli("getbids", "")
-            + HelpExampleRpc("getbids", "")
-        );
-
-	UniValue obj(UniValue::VOBJ);
-	ifstream myfile ((GetDataDir()/ "bidtracker/final.dat").string().c_str());
-
-	std::string line;
-	if (myfile.is_open()){
-		int i=1;
-		while ( myfile.good() ){
-			getline (myfile,line);
-			if (line.empty()) continue;
-            std::vector<std::string> strs;
-            boost::split(strs, line, boost::is_any_of(","));
-			obj.push_back(Pair((strs[0].c_str()),strs[1].c_str()));
-
-			i++;
-	}
-	}
-	myfile.close();
-    return obj;
-}
-
 UniValue convertaddresses(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
@@ -220,12 +185,10 @@ UniValue convertaddresses(const UniValue& params, bool fHelp)
             std::vector<std::string> strs;
             boost::split(strs, line, boost::is_any_of(","));
             CUniqreditAddress addressb(convertAddress(strs[0].c_str(),0x00));
-            CUniqreditAddress address(convertAddress(strs[0].c_str(),0x19));
+            CUniqreditAddress address(convertAddress(strs[0].c_str(),0x44));
             CAmount value=strtoll(strs[1].c_str(),&pEnd,10);
-            if (value > 1000000000000) {
-				conv << address.ToString().c_str() << "," << value << endl;
-				bitcoin << addressb.ToString().c_str() << "," << value << endl;
-			}
+			conv << address.ToString().c_str() << "," << value << endl;
+			bitcoin << addressb.ToString().c_str() << "," << value << endl;
 		}
 	}
 	myfile.close();
@@ -535,7 +498,6 @@ static const CRPCCommand commands[] =
     { "util",               "verifymessage",          &verifymessage,          true  },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, true  },
     { "util",               "convertaddresses",       &convertaddresses,       true  },
-    { "util",               "getbids",                &getbids,                true  },
 
     /* Not shown in help */
     { "hidden",             "setmocktime",            &setmocktime,            true  },

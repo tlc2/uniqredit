@@ -3,7 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "loanmanager.h"
-#include "bidtracker.h"
 #include "util.h"
 #include "addrman.h"
 #include "base58.h"
@@ -40,71 +39,6 @@
 #endif
 
 /** Loan manager */
-void CLoanManager::getcreditratings()
-{
-    std::string url = "";
-
-    const char * c = url.c_str();
-
-      std::string readBuffer;
-
-      curl = curl_easy_init();
-      if(curl) {
-		curl_global_init(CURL_GLOBAL_ALL);
-        curl_easy_setopt(curl, CURLOPT_URL, c);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Uniqredit/0.30");
-        res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-        }
-		if(res != CURLE_OK) {
-			if (fDebug) LogPrintf("Curl Error on CLoanServer::verifyregisteredID() - %s - on URL:%s.\n", curl_easy_strerror(res), url);
-		}
-		else {
-			if (fDebug) LogPrintf("Curl Response on CLoanServer::verifyregisteredID() - Lenght %lu - Buffer - %s .\n", (long)readBuffer.size(), readBuffer);
-			}
-
-	ofstream myfile((GetDataDir().string() + "/loandata/verifieddata.dat").c_str(),fstream::out);
-	myfile << readBuffer << std::endl;
-	myfile.close();
-
-}
-
-void CLoanManager::getverifieddata()
-{
-    std::string url = "";
-
-    const char * c = url.c_str();
-
-      std::string readBuffer;
-
-      curl = curl_easy_init();
-      if(curl) {
-		curl_global_init(CURL_GLOBAL_ALL);
-        curl_easy_setopt(curl, CURLOPT_URL, c);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Uniqredit/0.30");
-        res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-        }
-		if(res != CURLE_OK) {
-			if (fDebug) LogPrintf("Curl Error on CLoanServer::getverifieddata() - %s - on URL:%s.\n", curl_easy_strerror(res), url);
-		}
-		else {
-			if (fDebug) LogPrintf("Curl Response on CLoanServer::getverifieddata() - Lenght %lu - Buffer - %s .\n", (long)readBuffer.size(), readBuffer);
-			}
-
-	ofstream myfile((GetDataDir().string() + "/loandata/verifieddata.dat").c_str(),fstream::out);
-	myfile << readBuffer << std::endl;
-	myfile.close();
-
-}
 
 string CLoanManager::senddata(string data)
 {
@@ -150,53 +84,3 @@ string CLoanManager::senddata(string data)
 	return result;
 
 }
-
-/*
-string CLoanManager::process_conn_client(int s,string d){
-
-    ssize_t size = 0;
-    char buffer[256];
-    strcpy(buffer, d.c_str());
-
-    write(s,buffer,256);
-
-    LogPrintf("CLoanManager::process_conn_client sent %s !\n", d);
-
-    //get response from the server
-    size=read(s,buffer,256);
-    //write(1,buffer,size);
-
-    string result(buffer);
-
-	return result;
-
-}
-
-string CLoanManager::senddata(string data){
-
-    int s;
-    struct sockaddr_in server_addr;
-    bzero(&server_addr, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = inet_addr(DEST_IP);
-    server_addr.sin_port =  htons(PORT);
-    s = socket(AF_INET, SOCK_STREAM, 0);
-
-    if(s < 0){
-        LogPrintf("CLoanManager::senddata [process info]socket error  !\n");
-        return "Socket Error";
-    }
-    LogPrintf("CLoanManager::senddata [process info] socket built successfully  !\n");
-
-    if (connect(s, (struct sockaddr*)&server_addr, sizeof(struct sockaddr)) < 0){
-        LogPrintf("ERROR connecting\n");
-        return "Unable to connect, server likely down for maintanance";
-	}
-
-    string result = process_conn_client(s,data);
-
-    close(s);
-
-    return result;
-}
-*/

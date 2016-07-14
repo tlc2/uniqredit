@@ -3,6 +3,7 @@ EXTRA_LIBRARIES += qt/libuniqreditqt.a
 
 # uniqredit qt core #
 QT_TS = \
+  qt/locale/uniqredit_af.ts \
   qt/locale/uniqredit_af_ZA.ts \
   qt/locale/uniqredit_ar.ts \
   qt/locale/uniqredit_be_BY.ts \
@@ -22,7 +23,10 @@ QT_TS = \
   qt/locale/uniqredit_en_GB.ts \
   qt/locale/uniqredit_en.ts \
   qt/locale/uniqredit_eo.ts \
+  qt/locale/uniqredit_es_419.ts \
+  qt/locale/uniqredit_es_AR.ts \
   qt/locale/uniqredit_es_CL.ts \
+  qt/locale/uniqredit_es_CO.ts \
   qt/locale/uniqredit_es_DO.ts \
   qt/locale/uniqredit_es_ES.ts \
   qt/locale/uniqredit_es_MX.ts \
@@ -33,6 +37,7 @@ QT_TS = \
   qt/locale/uniqredit_eu_ES.ts \
   qt/locale/uniqredit_fa_IR.ts \
   qt/locale/uniqredit_fa.ts \
+  qt/locale/uniqredit_fil.ts \
   qt/locale/uniqredit_fi.ts \
   qt/locale/uniqredit_fr_CA.ts \
   qt/locale/uniqredit_fr_FR.ts \
@@ -43,6 +48,7 @@ QT_TS = \
   qt/locale/uniqredit_hr.ts \
   qt/locale/uniqredit_hu.ts \
   qt/locale/uniqredit_id_ID.ts \
+  qt/locale/uniqredit_it_IT.ts \
   qt/locale/uniqredit_it.ts \
   qt/locale/uniqredit_ja.ts \
   qt/locale/uniqredit_ka.ts \
@@ -62,22 +68,27 @@ QT_TS = \
   qt/locale/uniqredit_pt_BR.ts \
   qt/locale/uniqredit_pt_PT.ts \
   qt/locale/uniqredit_ro_RO.ts \
+  qt/locale/uniqredit_ro.ts \
   qt/locale/uniqredit_ru_RU.ts \
   qt/locale/uniqredit_ru.ts \
   qt/locale/uniqredit_sk.ts \
   qt/locale/uniqredit_sl_SI.ts \
   qt/locale/uniqredit_sq.ts \
+  qt/locale/uniqredit_sr@latin.ts \
   qt/locale/uniqredit_sr.ts \
   qt/locale/uniqredit_sv.ts \
+  qt/locale/uniqredit_ta.ts \
   qt/locale/uniqredit_th_TH.ts \
   qt/locale/uniqredit_tr_TR.ts \
   qt/locale/uniqredit_tr.ts \
   qt/locale/uniqredit_uk.ts \
   qt/locale/uniqredit_ur_PK.ts \
   qt/locale/uniqredit_uz@Cyrl.ts \
+  qt/locale/uniqredit_uz@Latn.ts \
   qt/locale/uniqredit_vi.ts \
   qt/locale/uniqredit_vi_VN.ts \
   qt/locale/uniqredit_zh_CN.ts \
+  qt/locale/uniqredit_zh_HK.ts \
   qt/locale/uniqredit_zh.ts \
   qt/locale/uniqredit_zh_TW.ts
 
@@ -422,19 +433,20 @@ QT_QM=$(QT_TS:.ts=.qm)
 
 SECONDARY: $(QT_QM)
 
-qt/uniqreditstrings.cpp: $(libuniqredit_server_a_SOURCES) $(libuniqredit_wallet_a_SOURCES)
+$(srcdir)/qt/uniqreditstrings.cpp: $(libuniqredit_server_a_SOURCES) $(libuniqredit_wallet_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
 	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" COPYRIGHT_HOLDERS="$(COPYRIGHT_HOLDERS)" COPYRIGHT_HOLDERS_SUBSTITUTION="$(COPYRIGHT_HOLDERS_SUBSTITUTION)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: qt/uniqreditstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(UNIQREDIT_QT_CPP) $(UNIQREDIT_QT_H) $(UNIQREDIT_MM)
+translate: $(srcdir)/qt/uniqreditstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(UNIQREDIT_QT_CPP) $(UNIQREDIT_QT_H) $(UNIQREDIT_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts qt/locale/uniqredit_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/uniqredit_en.ts
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
-	@test -f $(@D)/$(<F) || cp -f $< $(@D)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name uniqredit_locale $(@D)/$(<F) | \
+	@cp -f $< $(@D)/temp_$(<F)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name uniqredit_locale $(@D)/temp_$(<F) | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES) $(PROTOBUF_H)
 	@test -f $(RCC)

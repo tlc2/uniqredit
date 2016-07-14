@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource prefix="/translations">
+        <file alias="af">locale/uniqredit_af.qm</file>
         <file alias="af_ZA">locale/uniqredit_af_ZA.qm</file>
         <file alias="ar">locale/uniqredit_ar.qm</file>
         <file alias="be_BY">locale/uniqredit_be_BY.qm</file>
@@ -19,7 +20,10 @@
         <file alias="en_GB">locale/uniqredit_en_GB.qm</file>
         <file alias="en">locale/uniqredit_en.qm</file>
         <file alias="eo">locale/uniqredit_eo.qm</file>
+        <file alias="es_419">locale/uniqredit_es_419.qm</file>
+        <file alias="es_AR">locale/uniqredit_es_AR.qm</file>
         <file alias="es_CL">locale/uniqredit_es_CL.qm</file>
+        <file alias="es_CO">locale/uniqredit_es_CO.qm</file>
         <file alias="es_DO">locale/uniqredit_es_DO.qm</file>
         <file alias="es_ES">locale/uniqredit_es_ES.qm</file>
         <file alias="es_MX">locale/uniqredit_es_MX.qm</file>
@@ -30,6 +34,7 @@
         <file alias="eu_ES">locale/uniqredit_eu_ES.qm</file>
         <file alias="fa_IR">locale/uniqredit_fa_IR.qm</file>
         <file alias="fa">locale/uniqredit_fa.qm</file>
+        <file alias="fil">locale/uniqredit_fil.qm</file>
         <file alias="fi">locale/uniqredit_fi.qm</file>
         <file alias="fr_CA">locale/uniqredit_fr_CA.qm</file>
         <file alias="fr_FR">locale/uniqredit_fr_FR.qm</file>
@@ -40,6 +45,7 @@
         <file alias="hr">locale/uniqredit_hr.qm</file>
         <file alias="hu">locale/uniqredit_hu.qm</file>
         <file alias="id_ID">locale/uniqredit_id_ID.qm</file>
+        <file alias="it_IT">locale/uniqredit_it_IT.qm</file>
         <file alias="it">locale/uniqredit_it.qm</file>
         <file alias="ja">locale/uniqredit_ja.qm</file>
         <file alias="ka">locale/uniqredit_ka.qm</file>
@@ -59,22 +65,27 @@
         <file alias="pt_BR">locale/uniqredit_pt_BR.qm</file>
         <file alias="pt_PT">locale/uniqredit_pt_PT.qm</file>
         <file alias="ro_RO">locale/uniqredit_ro_RO.qm</file>
+        <file alias="ro">locale/uniqredit_ro.qm</file>
         <file alias="ru_RU">locale/uniqredit_ru_RU.qm</file>
         <file alias="ru">locale/uniqredit_ru.qm</file>
         <file alias="sk">locale/uniqredit_sk.qm</file>
         <file alias="sl_SI">locale/uniqredit_sl_SI.qm</file>
         <file alias="sq">locale/uniqredit_sq.qm</file>
+        <file alias="sr@latin">locale/uniqredit_sr@latin.qm</file>
         <file alias="sr">locale/uniqredit_sr.qm</file>
         <file alias="sv">locale/uniqredit_sv.qm</file>
+        <file alias="ta">locale/uniqredit_ta.qm</file>
         <file alias="th_TH">locale/uniqredit_th_TH.qm</file>
         <file alias="tr_TR">locale/uniqredit_tr_TR.qm</file>
         <file alias="tr">locale/uniqredit_tr.qm</file>
         <file alias="uk">locale/uniqredit_uk.qm</file>
         <file alias="ur_PK">locale/uniqredit_ur_PK.qm</file>
         <file alias="uz@Cyrl">locale/uniqredit_uz@Cyrl.qm</file>
+        <file alias="uz@Latn">locale/uniqredit_uz@Latn.qm</file>
         <file alias="vi">locale/uniqredit_vi.qm</file>
         <file alias="vi_VN">locale/uniqredit_vi_VN.qm</file>
         <file alias="zh_CN">locale/uniqredit_zh_CN.qm</file>
+        <file alias="zh_HK">locale/uniqredit_zh_HK.qm</file>
         <file alias="zh">locale/uniqredit_zh.qm</file>
         <file alias="zh_TW">locale/uniqredit_zh_TW.qm</file>
     </qresource>

@@ -7,14 +7,12 @@
 #include "main.h"
 #include "net.h"
 
-#include "bidtracker.h"
-
 #include <cstdlib>
 
 #include <fstream>
 #include <QMessageBox>
 #include <QDesktopServices>
-#include <QUrl>
+
 #include <QProcess>
 #include <QStandardPaths>
 #include <QDir>
@@ -23,22 +21,23 @@
 #include <QFileInfo>
 #include <QTimer>
 
+#include <QCoreApplication>
+#include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrl>
+#include <QUrlQuery>
+
 BidPage::BidPage(QWidget *parent)
     : QWidget(parent), ui(new Ui::BidPage)
 {
     ui->setupUi(this);
 
-    ui->lineEditBid->setEnabled(false);  //  cannot calc until update clicked and data fetched
-    
-    ui->electrumpwd->setEnabled(false);   //  disable scheduled bid elements until getbids method executed, we need some stuff it calcs
-    ui->bElectrum_2->setEnabled(false);
-
     connect(ui->pushButtonBTCExplorer, SIGNAL(clicked()), this, SLOT(SummonBTCExplorer()));
-    connect(ui->bElectrum, SIGNAL(clicked()), this, SLOT(SummonElectrum()));
-    connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(GetBids()));
-    connect(ui->lineEditBid, SIGNAL(returnPressed()), this, SLOT(Estimate()));
+    connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(sendRequests()));
     connect(ui->bImport, SIGNAL(clicked()), this, SLOT(RPC()));
-    connect(ui->bElectrum_2, SIGNAL(clicked()), this, SLOT(scheduleBid()));
+
 }
 
 void BidPage::setClientModel(ClientModel *model)
@@ -46,111 +45,65 @@ void BidPage::setClientModel(ClientModel *model)
     clientModel = model;
     if(model)
     {
-        setNumBlocks(model->getNumBlocks());
+        //setNumBlocks(model->getNumBlocks());
         //connect(model, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
     }
 }
 
-int BidPage::getNumBlocks()
+void BidPage::sendRequests()
 {
-    LOCK(cs_main);
-    return chainActive.Height();
+    sendRequest();
+    sendRequest2();
 }
 
-void BidPage::setNumBlocks(int count)
+void BidPage::sendRequest()
 {
-    ui->labelNumber->setText(QString::number(count));
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    manager->get(QNetworkRequest(QUrl("https://blockchain.info/q/addressbalance/16bi8R4FoDHfjNJ1RhpvcAEn4Cz78FbtZB")));
 }
 
-void BidPage::Estimate()
+void BidPage::replyFinished(QNetworkReply *reply)
 {
-    QString bidtotal = ui->labelBids->text();
-    float bidz = bidtotal.toFloat();
-    float mybid = ui->lineEditBid->text().toFloat();
-    float newtotal = bidz + mybid;
-    float mybcr = (mybid / newtotal) * 18000 * podl; 
-    QString mybcrz = QString::number(mybcr);
-    float cost = mybid / mybcr;
-    QString coststr = QString::number(cost, 'f', 8);
-    ui->labelBCR->setText("<b>" + mybcrz + "</b> UNIQ @ " + "<b>" + coststr + "</b>");
+    QByteArray data=reply->readAll();
+    QString btcassets(data);
+    double btcassetsasdouble = btcassets.toDouble();
+    QString reserves = QString::number(btcassetsasdouble/COIN, 'f', 8);
+    ui->labelReserves->setText(reserves);
 }
+
+void BidPage::sendRequest2()
+{
+    manager2 = new QNetworkAccessManager(this);
+    connect(manager2, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished2(QNetworkReply*)));
+    manager2->get(QNetworkRequest(QUrl("https://blockchain.info/q/addressbalance/1UniQ1TiDyGbB7KXejnjUAZMEjLCyiEPe")));
+}
+
+void BidPage::replyFinished2(QNetworkReply *reply2)
+{
+    QByteArray data2=reply2->readAll();
+    QString bids(data2);
+    double bidsasdouble = bids.toDouble();
+    QString bids2 = QString::number(bidsasdouble/COIN, 'f', 8);
+    ui->labelBids->setText(bids2);
+}
+
 
 void BidPage::GetBids()
 {
-    Bidtracker r;
+
     
     // get current BTC resrve assets
-    double btcassets = r.getbalance("https://blockchain.info/q/addressbalance/16bi8R4FoDHfjNJ1RhpvcAEn4Cz78FbtZB");
-    QString reserves = QString::number(btcassets/COIN, 'f', 8);
-    ui->labelReserves->setText(reserves);
+    //double btcassets = r.getbalance("https://blockchain.info/q/addressbalance/16bi8R4FoDHfjNJ1RhpvcAEn4Cz78FbtZB");
+    //QString reserves = QString::number(btcassets/COIN, 'f', 8);
+    //ui->labelReserves->setText(reserves);
     
     // get current bids
-    double bids = r.getbalance("https://blockchain.info/q/addressbalance/1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu");
-    QString bidz = QString::number(bids/COIN, 'f', 8);
-    ui->labelBids->setText(bidz);    
-    
-    // calc time until next 00:00 GMT
-    long int startdate = 1450396800; // 18 December 2015 00:00
-    long int current = GetTime();
-    long int diff = current - startdate;
+    //double bids = r.getbalance("https://blockchain.info/q/addressbalance/1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu");
+    //QString bidz = QString::number(bids/COIN, 'f', 8);
+    //ui->labelBids->setText(bidz);    
 
-    int until = 86400 - (diff % 86400);
-    ui->labelNumber->setText(GUIUtil::formatDurationStr(until));
 
-    // percentage of day left for use in calculator estimate
-    podl = (float)until/86400;
-
-/*  //  no files being geberated yet in bidtracker dir so we'll just calc based on what the bids are we just pulled from blockchain.info
-    // get default datadir, tack on bidtracker
-    QString dataDir = getDataDirectory();
-    QString bidDir = "bidtracker";
-    QString datPath = pathAppend(dataDir, bidDir);
-
-    // get bids from /bidtracker/final.dat
-    QString bidspath = QDir(datPath).filePath("prefinal.dat");
-    double btctot = 0;
-    // for each line in file, get the float after the comma
-    QFile bidsFile(bidspath);
-    if (bidsFile.open(QIODevice::ReadOnly))
-    {
-       QTextStream btcin(&bidsFile);
-       while (!btcin.atEnd())
-       {
-           QString line = btcin.readLine();
-           if (line.isEmpty()){ continue; }
-           else if (line.startsWith("1"))  //  BTC
-           {
-               QString btcamount = line.remove(0, 35);
-               btctot = btctot + btcamount.toDouble();
-           }
-       else //  we should never get here
-           {
-               QMessageBox::information(0, QString("Oops!"), QString("There is a problem with the file, please try again later!"), QMessageBox::Ok);
-           }
-       }
-       bidsFile.close();
-    }
-
-    // btctot in satoshis, so divide by 10000000 to get right units
-    double btctotU = btctot / 100000000;
-    QString btctotal = QString::number(btctotU, 'f', 8);
-    //ui->labelTotal_2->setText(btctotal);
-
-    // add 'em up and display 'em
-    double alltot = btctotU;
-    QString alltotal = QString::number(alltot, 'f', 8);
-    ui->labelTotal_2->setText(alltotal);
-*/
-
-    // calc price per UNIQ based on total bids and display it
-    //double bcrprice = btctotU / 18000;
-    double bcrprice = (bids / 18000) / 100000000;
-    QString bcrPrice = QString::number(bcrprice, 'f', 8);
-    ui->labelEstprice_2->setText(bcrPrice);
-
-    ui->lineEditBid->setEnabled(true);
-    ui->electrumpwd->setEnabled(true);
-    ui->bElectrum_2->setEnabled(true);
 }
 
 QString BidPage::pathAppend(const QString& path1, const QString& path2)
@@ -165,19 +118,7 @@ QString BidPage::getDataDirectory()
 
 void BidPage::SummonBTCExplorer()
 {
-    QDesktopServices::openUrl(QUrl("https://btc.blockr.io/address/info/1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu", QUrl::TolerantMode));
-}
-
-void BidPage::SummonElectrum()
-{
-    proc = new QProcess(this);
-    #ifdef __linux
-        QString elect = "electrum \"bitcoin:1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu?amount=0.005\"";
-        proc->startDetached(elect);
-    #elif _WIN32
-        QString elect = "electrum.exe \"bitcoin:1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu?amount=0.005\"";
-        proc->startDetached(elect);
-    #endif
+    QDesktopServices::openUrl(QUrl("https://btc.blockr.io/address/info/1UniQ1TiDyGbB7KXejnjUAZMEjLCyiEPe", QUrl::TolerantMode));
 }
 
 bool BidPage::fileExists(QString path) 
@@ -254,90 +195,6 @@ void BidPage::RPC()
     
     // reset privkey field
     ui->lineEditPrivkey->setText("");   
-}
-
-void BidPage::scheduleBid()
-{
-    // check passphrase has been entered and bid amount >= 0.005
-    QString electrumpwd = ui->electrumpwd->text();
-    double bidamount = ui->lineEditBid_2->text().toDouble();
-    if ((electrumpwd == "") || (bidamount < 0.005))             // ************ change back to 0.005 after testing ************** 
-    {
-        QMessageBox::information(0, QString("Attention!"), QString("You must enter the passphrase for your Bitcoin Electrum wallet\nand the bid amount must be at least 0.005 BTC."), QMessageBox::Ok);
-        return;
-    }
-    
-    // get secs until next bid period starts
-    double untilsecs = (podl * 86400) + 120; // percentage of day left calced in getbids() * secs in day, then add 120 secs leeway so bid is made about 2min after midnight GMT
-    QString untilsecz = QString::number(untilsecs);
-    QMessageBox::information(0, QString("Bid scheduled!"), QString(untilsecz + " seconds until midnight GMT!\nYour bid: " + ui->lineEditBid_2->text() + " BTC"), QMessageBox::Ok);
-    // set timer to call electrum daemon
-    electrumtimer = new QTimer(this);
-    electrumtimer->setSingleShot(true);
-    connect(electrumtimer, SIGNAL(timeout()), this, SLOT(callElectrumDaemon()));
-    electrumtimer->start(untilsecs * 1000); // millisecs
-    //electrumtimer->start(3000);
-
-    ui->bElectrum_2->setText("Bid Scheduled!");
-}
-
-void BidPage::callElectrumDaemon()
-{
-    // for now we'll leave it to the user to make sure the electrum daemon is running
-
-    QString pwd = ui->electrumpwd->text();
-       
-    QString cmdnix = "electrum payto 1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu " + ui->lineEditBid_2->text() + " --password " + pwd;
-    QString cmdwin = "electrum.exe payto 1BCRbid2i3wbgqrKtgLGem6ZchcfYbnhNu " + ui->lineEditBid_2->text() + " --password " + pwd;
-    
-    procsched = new QProcess(this);
-        
-    // create tx
-    #ifdef __linux
-        procsched->start(cmdnix);
-        procsched->waitForFinished();
-        QString outputsched(procsched->readAllStandardOutput()); // check for any output
-    #elif _WIN32
-        procsched->start(cmdwin);
-        procsched->waitForFinished();
-        QString outputsched(procsched->readAllStandardOutput()); // check for any output
-    #endif 
-
-    // reset privkey field
-    ui->electrumpwd->setText("");       
-
-    // extract hex
-    QStringList chunks = outputsched.split(":");
-    QString hexwithquotes = chunks.value(2);
-    
-    QString hex = hexwithquotes.replace("\"", "");
-    hex = hex.replace("\n", "");
-    hex = hex.replace("\r", "");
-    hex = hex.replace(" ", "");
-    hex = hex.replace("}", "");
-   
-    // broadcast tx
-    QString cmdnix2 = "electrum broadcast " + hex;
-    QString cmdwin2 = "electrum.exe broadcast " + hex;
-
-    procsched2 = new QProcess(this);
-
-    #ifdef __linux
-        procsched2->start(cmdnix2);
-        procsched2->waitForFinished();
-        QString outputsched2(procsched2->readAllStandardOutput()); // check for any output
-    #elif _WIN32
-        procsched2->start(cmdwin2);
-        procsched2->waitForFinished();
-        QString outputsched2(procsched2->readAllStandardOutput()); // check for any output
-    #endif 
-
-    // extract txid from output
-    QStringList chunks2 = outputsched2.split("\"");
-    QString txid = chunks2.value(1);
-        
-    QMessageBox::information(0, QString("Bid made!"), "txid: " + txid, QMessageBox::Ok); // txid of bid  if all went well
-    ui->bElectrum_2->setText("Schedule Bid");
 }
 
 BidPage::~BidPage()

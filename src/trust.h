@@ -17,7 +17,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/thread.hpp>
-#include <sqlite3.h>
+
 
 extern int callback(void *NotUsed, int argc, char **argv, char **azColName);
 extern std::map<std::string,int64_t> getbalances();

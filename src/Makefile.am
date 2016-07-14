@@ -3,8 +3,8 @@ DIST_SUBDIRS = secp256k1 univalue
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
-EXTRA_LIBRARIES = 
-LIBS = -lcurl -lanl -lsqlite3
+EXTRA_LIBRARIES =
+LIBS += -lsqlite3
 if EMBEDDED_UNIVALUE
 LIBUNIVALUE = univalue/libunivalue.la
 
@@ -15,13 +15,12 @@ LIBUNIVALUE = $(UNIVALUE_LIBS)
 endif
 
 UNIQREDIT_CONFIG_INCLUDES=-I$(builddir)/config
-UNIQREDIT_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
+UNIQREDIT_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
 
 UNIQREDIT_INCLUDES += -I$(srcdir)/secp256k1/include
 UNIQREDIT_INCLUDES += $(UNIVALUE_CFLAGS)
 
 LIBUNIQREDIT_SERVER=libuniqredit_server.a
-LIBUNIQREDIT_WALLET=libuniqredit_wallet.a
 LIBUNIQREDIT_COMMON=libuniqredit_common.a
 LIBUNIQREDIT_CONSENSUS=libuniqredit_consensus.a
 LIBUNIQREDIT_CLI=libuniqredit_cli.a
@@ -30,32 +29,32 @@ LIBUNIQREDIT_CRYPTO=crypto/libuniqredit_crypto.a
 LIBUNIQREDITQT=qt/libuniqreditqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
+if ENABLE_ZMQ
+LIBUNIQREDIT_ZMQ=libuniqredit_zmq.a
+endif
+if BUILD_UNIQREDIT_LIBS
+LIBUNIQREDITCONSENSUS=libuniqreditconsensus.la
+endif
+if ENABLE_WALLET
+LIBUNIQREDIT_WALLET=libuniqredit_wallet.a
+endif
+
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  crypto/libuniqredit_crypto.a \
-  libuniqredit_util.a \
-  libuniqredit_common.a \
-  libuniqredit_consensus.a \
-  libuniqredit_server.a \
-  libuniqredit_cli.a
-if ENABLE_WALLET
-UNIQREDIT_INCLUDES += $(BDB_CPPFLAGS)
-EXTRA_LIBRARIES += libuniqredit_wallet.a
-endif
-if ENABLE_ZMQ
-EXTRA_LIBRARIES += libuniqredit_zmq.a
-endif
+  $(LIBUNIQREDIT_CRYPTO) \
+  $(LIBUNIQREDIT_UTIL) \
+  $(LIBUNIQREDIT_COMMON) \
+  $(LIBUNIQREDIT_CONSENSUS) \
+  $(LIBUNIQREDIT_SERVER) \
+  $(LIBUNIQREDIT_CLI) \
+  $(LIBUNIQREDIT_WALLET) \
+  $(LIBUNIQREDIT_ZMQ)
 
-if BUILD_UNIQREDIT_LIBS
-lib_LTLIBRARIES = libuniqreditconsensus.la
-LIBUNIQREDITCONSENSUS=libuniqreditconsensus.la
-else
-LIBUNIQREDITCONSENSUS=
-endif
+lib_LTLIBRARIES = $(LIBUNIQREDITCONSENSUS)
 
 bin_PROGRAMS =
 TESTS =
@@ -74,8 +73,8 @@ endif
 UNIQREDIT_CORE_H = \
   addrman.h \
   base58.h \
-  bidtracker.h \
   bloom.h \
+  blockencodings.h \
   chain.h \
   chainparams.h \
   chainparamsbase.h \
@@ -95,6 +94,7 @@ UNIQREDIT_CORE_H = \
   core_memusage.h \
   httprpc.h \
   httpserver.h \
+  indirectmap.h \
   init.h \
   key.h \
   keystore.h \
@@ -165,8 +165,8 @@ libuniqredit_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(UNIQREDIT_INCLUDES) $(MINIUPNP
 libuniqredit_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libuniqredit_server_a_SOURCES = \
   addrman.cpp \
-  bidtracker.cpp \
   bloom.cpp \
+  blockencodings.cpp \
   chain.cpp \
   checkpoints.cpp \
   httprpc.cpp \
@@ -203,8 +203,6 @@ libuniqredit_server_a_SOURCES = \
   $(UNIQREDIT_CORE_H)
 
 if ENABLE_ZMQ
-LIBUNIQREDIT_ZMQ=libuniqredit_zmq.a
-
 libuniqredit_zmq_a_CPPFLAGS = $(UNIQREDIT_INCLUDES) $(ZMQ_CFLAGS)
 libuniqredit_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libuniqredit_zmq_a_SOURCES = \
@@ -232,6 +230,8 @@ libuniqredit_wallet_a_SOURCES = \
 crypto_libuniqredit_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(UNIQREDIT_CONFIG_INCLUDES)
 crypto_libuniqredit_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libuniqredit_crypto_a_SOURCES = \
+  crypto/aes.cpp \
+  crypto/aes.h \
   crypto/common.h \
   crypto/hmac_sha256.cpp \
   crypto/hmac_sha256.h \
@@ -352,21 +352,15 @@ uniqreditd_LDADD = \
   $(LIBUNIQREDIT_COMMON) \
   $(LIBUNIVALUE) \
   $(LIBUNIQREDIT_UTIL) \
+  $(LIBUNIQREDIT_WALLET) \
+  $(LIBUNIQREDIT_ZMQ) \
   $(LIBUNIQREDIT_CONSENSUS) \
   $(LIBUNIQREDIT_CRYPTO) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-if ENABLE_ZMQ
-uniqreditd_LDADD += $(LIBUNIQREDIT_ZMQ) $(ZMQ_LIBS)
-endif
-
-if ENABLE_WALLET
-uniqreditd_LDADD += libuniqredit_wallet.a
-endif
-
-uniqreditd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+uniqreditd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # uniqredit-cli binary #
 uniqredit_cli_SOURCES = uniqredit-cli.cpp
@@ -381,7 +375,8 @@ endif
 uniqredit_cli_LDADD = \
   $(LIBUNIQREDIT_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBUNIQREDIT_UTIL)
+  $(LIBUNIQREDIT_UTIL) \
+  $(LIBUNIQREDIT_CRYPTO)
 
 uniqredit_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
@@ -424,8 +419,14 @@ libuniqreditconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #
 
-CLEANFILES = leveldb/libleveldb.a leveldb/libmemenv.a
-CLEANFILES += $(EXTRA_LIBRARIES)
+CTAES_DIST =  crypto/ctaes/bench.c
+CTAES_DIST += crypto/ctaes/ctaes.c
+CTAES_DIST += crypto/ctaes/ctaes.h
+CTAES_DIST += crypto/ctaes/README.md
+CTAES_DIST += crypto/ctaes/test.c
+
+CLEANFILES = $(EXTRA_LIBRARIES)
+
 CLEANFILES += *.gcda *.gcno
 CLEANFILES += compat/*.gcda compat/*.gcno
 CLEANFILES += consensus/*.gcda consensus/*.gcno
@@ -441,14 +442,14 @@ CLEANFILES += zmq/*.gcda zmq/*.gcno
 
 DISTCLEANFILES = obj/build.h
 
-EXTRA_DIST = leveldb
+EXTRA_DIST = $(CTAES_DIST)
 
 clean-local:
-	-$(MAKE) -C leveldb clean
 	-$(MAKE) -C secp256k1 clean
 	-$(MAKE) -C univalue clean
 	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
 	-rm -f config.h
+	-rm -rf test/__pycache__
 
 .rc.o:
 	@test -f $(WINDRES)

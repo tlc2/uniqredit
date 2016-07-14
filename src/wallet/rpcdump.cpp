@@ -7,6 +7,7 @@
 #include "rpc/server.h"
 #include "init.h"
 #include "main.h"
+#include "miner.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "sync.h"
@@ -105,6 +106,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     string strSecret = params[0].get_str();
+    strSecret = convertAddress(strSecret.c_str(),0x80);
     string strLabel = "";
     if (params.size() > 1)
         strLabel = params[1].get_str();
@@ -167,6 +169,11 @@ void ImportScript(const CScript& script, const string& strLabel, bool isRedeemSc
         if (!pwalletMain->HaveCScript(script) && !pwalletMain->AddCScript(script))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding p2sh redeemScript to wallet");
         ImportAddress(CUniqreditAddress(CScriptID(script)), strLabel);
+    } else {
+        CTxDestination destination;
+        if (ExtractDestination(script, destination)) {
+            pwalletMain->SetAddressBook(destination, strLabel, "receive");
+        }
     }
 }
 
@@ -195,6 +202,8 @@ UniValue importaddress(const UniValue& params, bool fHelp)
             "4. p2sh                 (boolean, optional, default=false) Add the P2SH version of the script as well\n"
             "\nNote: This call can take minutes to complete if rescan is true.\n"
             "If you have the full public key, you should call importpubkey instead of this.\n"
+            "\nNote: If you import a non-standard raw script in hex form, outputs sending to it will be treated\n"
+            "as change, and not show up in many RPCs.\n"
             "\nExamples:\n"
             "\nImport a script with rescan\n"
             + HelpExampleCli("importaddress", "\"myscript\"") +
@@ -458,7 +467,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         if (vstr.size() < 2)
             continue;
         CUniqreditSecret vchSecret;
-        if (!vchSecret.SetString(vstr[0]))
+        if (!vchSecret.SetString(convertAddress((vstr[0]).c_str(),0x80)))
             continue;
         CKey key = vchSecret.GetKey();
         CPubKey pubkey = key.GetPubKey();
@@ -590,7 +599,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by Uniqredit %s (%s)\n", CLIENT_BUILD, CLIENT_DATE);
+    file << strprintf("# Wallet dump created by Uniqredit %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));

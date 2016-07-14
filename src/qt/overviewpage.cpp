@@ -127,7 +127,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // help stylesheet find things
     ui->btx->setObjectName("btx");
     ui->bsend->setObjectName("bsend");
-    ui->bgetbcr->setObjectName("bgetbcr");
+    //ui->bgetbcr->setObjectName("bgetbcr");
     ui->bp2p->setObjectName("bp2p");
     ui->bassets->setObjectName("bassets");
     ui->butilities->setObjectName("butilities");
@@ -152,11 +152,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // emit signals when menu buttons clicked that walletview can pick up to switch pages
     connect(ui->btx, SIGNAL(clicked()), this, SLOT(emitbtxclicked()));
     connect(ui->bsend, SIGNAL(clicked()), this, SLOT(emitbsendclicked()));
-    connect(ui->bgetbcr, SIGNAL(clicked()), this, SLOT(emitbgetbcrclicked()));
+    //connect(ui->bgetbcr, SIGNAL(clicked()), this, SLOT(emitbgetbcrclicked()));
     connect(ui->bp2p, SIGNAL(clicked()), this, SLOT(emitbp2pclicked()));
     connect(ui->bassets, SIGNAL(clicked()), this, SLOT(emitbassetsclicked()));
-    connect(ui->butilities, SIGNAL(clicked()), this, SLOT(emitbutilitiesclicked()));
-    
+    connect(ui->butilities, SIGNAL(clicked()), this, SLOT(emitbutilitiesclicked()));   
 }
 
 void OverviewPage::emitbtxclicked()

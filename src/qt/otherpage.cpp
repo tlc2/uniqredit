@@ -18,8 +18,14 @@ OtherPage::OtherPage(QWidget *parent)
     connect(ui->bOptions, SIGNAL(clicked()), this, SLOT(emitbOptionsclicked()));
     connect(ui->bRPC, SIGNAL(clicked()), this, SLOT(emitbRPCclicked()));
     connect(ui->bHelp, SIGNAL(clicked()), this, SLOT(emitbHelpclicked()));
+    connect(ui->bBlockshares, SIGNAL(clicked()), this, SLOT(emitbBlocksharesclicked()));
 }
 
+
+void OtherPage::emitbBlocksharesclicked()
+{
+    Q_EMIT bBlocksharesclicked();
+}
 
 void OtherPage::emitbURIclicked()
 {

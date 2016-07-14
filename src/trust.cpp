@@ -1,11 +1,11 @@
 #include "trust.h"
 
-#include "bidtracker.h"
 #include "util.h"
 #include "utilmoneystr.h"
 #include "base58.h"
 #include "primitives/transaction.h"
 #include "primitives/block.h"
+#include <sqlite3.h>
 
 using namespace std;
 

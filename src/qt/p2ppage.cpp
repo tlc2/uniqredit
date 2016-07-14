@@ -87,6 +87,7 @@ void P2PPage::SubmitLoanRequest()
     QString expiry = ui->cb_expiry->currentText();
     QString period = ui->cb_period->currentText();
     QString message = ui->te_message->toPlainText();
+    message.replace(",", ""); // remove commas as it screws up the csv parsing for the p2plpage table
 
     // convert premium / expiry / period to appropriate numbers
 
@@ -140,9 +141,16 @@ void P2PPage::SubmitLoanRequest()
         QString outputerror(proc1->readAllStandardError());      
     #endif
 
-    QMessageBox::information(0, QString("Info!"), output, QMessageBox::Ok);
+    if (outputerror == "") 
+    {    
+        QMessageBox::information(0, QString("Info!"), output, QMessageBox::Ok);
+    }
+    else
+    {
+        QMessageBox::information(0, QString("Info!"), outputerror, QMessageBox::Ok);
+    }
 
-    // provide feedback on result
+    /*/ provide feedback on result    // commented out as error msg is returned above anyway
     if (output.contains("Sent")) 
     {
         QMessageBox::information(0, QString("Request submitted!"), QString("Thank you, your loan request has been submitted and the 100 UNIQ fee deducted from your balance."), QMessageBox::Ok); 
@@ -150,7 +158,7 @@ void P2PPage::SubmitLoanRequest()
     else
     {
         QMessageBox::information(0, QString("Attention!"), QString("There was a problem with your loan request. Please check your entered paramaters and password and retry.\n\n" + outputerror), QMessageBox::Ok); 
-    }
+    }*/
 }
 
 bool P2PPage::fileExists(QString path) 

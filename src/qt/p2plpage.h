@@ -6,6 +6,21 @@
 #include <QWidget>
 #include <QFrame>
 #include <QLabel>
+#include <QMessageBox>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QCoreApplication>
+#include <QList>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QSslError>
+#include <QStringList>
+#include <QTimer>
+#include <QUrl>
 
 namespace Ui
 {
@@ -25,7 +40,14 @@ public:
 private:
     Ui::P2PLPage *ui;
     ClientModel *clientModel;
+    
+    QNetworkAccessManager *manager;
 
+private Q_SLOTS:
+	//void importCSVFile();
+    void sendRequest();
+    void replyFinished(QNetworkReply *reply);
+    void loanRequestSelected(const QItemSelection &, const QItemSelection &);
 };
 
 #endif // P2PLPAGE_H

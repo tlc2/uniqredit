@@ -20,7 +20,7 @@
 #include "wallet/rpcwallet.h"
 #endif
 
-#define SERVER "UMzP1cQjT8Fyo65y7KGpJAwHykGxFBB4dq"
+#define SERVER "Uburnzxd6nwAisxMZHvV1Nqs9osdinop1u"
 
 #include <stdint.h>
 
@@ -111,8 +111,10 @@ UniValue loanfunds(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     SendMoney(address.Get(), nAmount, false, wtx);
-
     string tx= wtx.GetHash().GetHex();
+    CUniqreditAddress address2(SERVER);
+    CAmount nAmount2 = AmountFromValue(100);
+    SendMoney(address2.Get(), nAmount2, true, wtx);
 	string strAddress  = params[0].get_str();
 	string receiver  = params[1].get_str();
 	string reqtx  = params[2].get_str();
@@ -198,7 +200,7 @@ UniValue registeraddress(const UniValue& params, bool fHelp)
 	CWalletTx wtx;
     LOCK2(cs_main, pwalletMain->cs_wallet);
     CUniqreditAddress address(SERVER);
-    CAmount nAmount = AmountFromValue(1000);
+    CAmount nAmount = AmountFromValue(100);
     EnsureWalletIsUnlocked();
     SendMoney(address.Get(), nAmount, true, wtx);
 

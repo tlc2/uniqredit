@@ -1,21 +1,22 @@
 QMainWindow 
 {
-color: white;
-background-color: #232323;
+color: #232323;
+background-color: #ffffff;
 }
 
 QWidget
 {
 font-family: Arial;
-color: white;
-background-color: #232323;
+color: #232323;
+background-color: #ffffff;
 }
 
 QLineEdit
 {
-color: #ffffff;
-background-color: #444444;
+color: #232323;
+background-color: #aaaaaa;
 border: none;
+/*border-radius: 8px;*/
 }
 
 
@@ -24,7 +25,7 @@ border: none;
 #Logo
 {
 background-image: url(':css/logo');
-background-color: #232323;
+background-color: #ffffff;
 background-repeat: none; 
 background-position: left;
 border: none;
@@ -38,23 +39,23 @@ background-image: url(':css/logo');
 
 #bframe
 {
-border: 1px solid #ff1a00;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 
 #labelBalance
 {
 font: 12pt;
-background-color: #232323;
-color: white;
-
+background-color: #ffffff;
+color: #232323;
 qproperty-alignment: AlignCenter;
 }
 
 #labelHeaderBalance
 {
 font: 16pt;
-background-color: #232323;
-color: white;
+background-color: #ffffff;
+color: #232323;
 qproperty-alignment: AlignCenter;
 }
 
@@ -64,12 +65,12 @@ qproperty-alignment: AlignCenter;
 
 #toolbarwidget
 {
-background-color: #232323;
+background-color: #ffffff;
 }
 
 
 
-/* uniqreditgui sendrec 'toolbar' */
+/* bitcreditgui sendrec 'toolbar' */
 #sendrec
 {
 border: none;
@@ -77,35 +78,35 @@ border: none;
 #bsendtab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bsendtab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bsendtab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 #brectab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #brectab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.05 #36b452);
 }
 #brectab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+background-color: #36b452;
 }
 
-/* uniqreditgui p2p lend / borrow 'toolbar' */
+/* bitcreditgui p2p lend / borrow 'toolbar' */
 #p2p
 {
 border: none;
@@ -113,32 +114,32 @@ border: none;
 #bborrow
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bborrow:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bborrow:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 #blend
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #blend:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.05 #36b452);
 }
 #blend:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+background-color: #36b452;
 }
 
 
@@ -148,65 +149,65 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 #bbcrstatstab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bbcrstatstab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bbcrstatstab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 
 #bexplorertab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bexplorertab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bexplorertab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 
 #bmarkettab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bmarkettab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bmarkettab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 
 #bothertab
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 border: none;
 }
 #bothertab:hover
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #aaaaaa, stop:0.2 #aaaaaa, stop:0.02 #36b452);
 }
 #bothertab:checked
 {
-background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+background-color: #36b452;
 }
 
 
@@ -219,42 +220,42 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 {
 padding: none; 
 border: none; 
-background-color: #232323; 
+background-color: #ffffff; 
 background-image: url(':/icons/about'); 
 background-repeat: none; 
 background-position: center;
 }
 #aboutButton:hover
 {
-background-color: #444444; 
+background-color: #aaaaaa; 
 }
 
 #hideButton
 {
 padding: none; 
 border: none; 
-background-color: #232323; 
+background-color: #ffffff; 
 background-image: url(':/icons/hide'); 
 background-repeat: none; 
 background-position: center;
 }
 #hideButton:hover
 {
-background-color: #444444; 
+background-color: #aaaaaa; 
 }
 
 #quitButton
 {
 padding: none; 
 border: none; 
-background-color: #232323; 
+background-color: #ffffff; 
 background-image: url(':/icons/quit'); 
 background-repeat: none; 
 background-position: center;
 }
 #quitButton:hover
 {
-background-color: #444444; 
+background-color: #aaaaaa; 
 }
 
 
@@ -272,16 +273,17 @@ border: none;
 #bover
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 text-align: center;
 /*background-image: url(':css/menu1');*/
 /*background-position: center;*/
 }
 #bover:hover
 {
-background-color: #444444;
+background-color: #36b452;
 /*background-image: url(':css/menu2');*/
 /*background-position: center;*/
 }
@@ -289,86 +291,93 @@ background-color: #444444;
 #btx
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #btx:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 #bsend
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #bsend:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 #brec
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #brec:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 #bgetbcr
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #bgetbcr:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 #bp2p
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #bp2p:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 
 #bassets
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #bassets:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 #butilities
 {
 font: 12pt;
-background-color: #323232;
-color: #ffffff;
-border: none;
+background-color: #ffffff;
+color: #232323;
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 }
 #butilities:hover
 {
-background-color: #444444;
+background-color: #36b452;
 }
 
 
@@ -378,55 +387,58 @@ background-color: #444444;
 {
 font: 12pt;
 background-color: #323232;
-color: #ffffff;
+color: #232323;
 border: none;
 }
 #bRPC:hover
 {
-background-color: #444444;
+background-color: #aaaaaa;
 border: none;
 }
 
 
-
+*/
 
 /*   Everything else - mostly placeholding   */
  
 QTextEdit
 {
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
+/*border-radius: 8px;*/
 }
 
 QTableView
 {
-    alternate-background-color: #444444;
+    alternate-background-color: #aaaaaa;
 }
 
 QProgressBar
 {
-    border: 1px solid white;
+    border: 1px solid #232323;
     text-align: center;
 }
 
 QProgressBar::chunk
 {
-    background-color: #ff1a00;
+    background-color: #36b452;
     width: 2.15px;
     margin: 0.5px;
 }
 
 QPushButton
 {
-color: white;
-background-color: #323232;
-border: none;
+color: #232323;
+background-color: #ffffff;
+/*background: transparent;*/
+border: 1px solid #36b452;
+/*border-radius: 8px;*/
 outline: none;
 }
 QPushButton:hover
 {
-color: white;
-background-color: #444444;
+color: #232323;
+background-color: #36b452;
 border: none;
 }
 
@@ -434,7 +446,7 @@ QTabBar::tab {
     color: #b1b1b1;
     border: 1px solid #444;
     border-bottom-style: none;
-    background-color: #232323;
+    background-color: #ffffff;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
@@ -464,7 +476,7 @@ QTabBar::tab:!selected
     color: #b1b1b1;
     border-bottom-style: solid;
     margin-top: 3px;
-    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #212121, stop:.4 #343434);
+    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:.4 #343434);
 }
 
 QTabBar::tab:selected
@@ -472,7 +484,7 @@ QTabBar::tab:selected
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     margin-bottom: 0px;
-    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #212121, stop:0.4 #343434, stop:0.2 #343434, stop:0.1 #ff1a00);
+    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #343434, stop:0.2 #343434, stop:0.1 #36b452);
 }
 
 QTabBar::tab:!selected:hover
@@ -481,21 +493,21 @@ QTabBar::tab:!selected:hover
     padding-bottom: 3px;*/
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #212121, stop:0.4 #343434, stop:0.2 #343434, stop:0.1 #ff1a00);
+    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #aaaaaa, stop:0.4 #343434, stop:0.2 #343434, stop:0.1 #36b452);
 }
 
 QHeaderView::section
 {
-    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:0 #616161, stop: 0.5 #505050, stop: 0.6 #434343, stop:1 #656565);
-    color: white;
+    background-color: #aaaaaa;
+    color: #232323;
     padding-left: 4px;
     border: 1px solid #6c6c6c;
 }
 
 Qcombobox QListItem
 {
-    color: white;
-    background-color: #323232;
+    color: #232323;
+    background-color: #ffffff;
 }
 
 
@@ -503,22 +515,22 @@ Qcombobox QListItem
 QComboBox
 {
 padding: 0px 0px 0px 0px;
-background-color: #323232;
-selection-background-color: #232323;
-color: #ffffff;
+background-color: #aaaaaa;
+selection-background-color: #aaaaaa;
+color: #232323;
 }
 
 QComboBox QAbstractItemView
 {
-selection-background-color: #444444;
-background-color: #323232;
-color: #ffffff;
+selection-background-color: #aaaaaa;
+background-color: #aaaaaa;
+color: #232323;
 }
 
 QComboBox::drop-down
 {
-background-color: #323232;
-color: #ffffff;
+background-color: #aaaaaa;
+color: #232323;
 subcontrol-origin: padding;
 subcontrol-position: top right;
 width: 15px;
@@ -534,33 +546,27 @@ QComboBox::down-arrow
 image: url(':css/down_arrow');
 }
 
-#UniqreditAmountField
-{
-background-color: green;
-color: blue;
-}
-
 
 QScrollBar:vertical 
 {
-border: 1px solid #ff1a00;
-background: #232323;
+border: 1px solid #36b452;
+background: #ffffff;
 width: 15px;
 margin: 22px 0 22px 0;
 }
 QScrollBar::handle:vertical {
-background: #444444;
+background: #aaaaaa;
 min-height: 20px;
 }
 QScrollBar::add-line:vertical {
-border: 1px solid #ff1a00;
+border: 1px solid #36b452;
 background: #323232;
 height: 20px;
 subcontrol-position: bottom;
 subcontrol-origin: margin;
 }
 QScrollBar::sub-line:vertical {
-border: 1px solid #ff1a00;
+border: 1px solid #36b452;
 background: #323232;
 height: 20px;
 subcontrol-position: top;
@@ -581,9 +587,14 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 background: none;
 }
 
+QSpinBox
+{
+/*border-radius: 8px;*/
+}
+
 QAbstractSpinBox
 {
-background: white;
+background: #ffffff;
 color: black;
 }
 

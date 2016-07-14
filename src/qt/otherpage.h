@@ -34,6 +34,7 @@ Q_SIGNALS:
     void bOptionsclicked();
     void bRPCclicked();
     void bHelpclicked();
+    void bBlocksharesclicked();
 
 private:
     Ui::OtherPage *ui;
@@ -51,6 +52,7 @@ private Q_SLOTS:
     void emitbOptionsclicked();
     void emitbRPCclicked();
     void emitbHelpclicked();
+    void emitbBlocksharesclicked();
 };
 
 #endif // OTHERPAGE_H

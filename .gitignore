@@ -43,8 +43,6 @@ src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
-cache.db
-*__pycache__
 .deps
 .dirstamp
 .libs
@@ -87,15 +85,13 @@ src/test/buildenv.py
 # Resources cpp
 qrc_*.cpp
 
-# Qt creator
-*.pro.user
-
 # Mac specific
 .DS_Store
 build
 
 #lcov
 *.gcno
+*.gcda
 /*.info
 test_uniqredit.coverage/
 total.coverage/
@@ -106,13 +102,16 @@ linux-coverage-build
 linux-build
 win32-build
 qa/pull-tester/run-uniqreditd-for-test.sh
-qa/pull-tester/tests-config.sh
+qa/pull-tester/tests_config.py
 qa/pull-tester/cache/*
 qa/pull-tester/test.*/*
+qa/tmp
+cache/
+share/UniqreditdComparisonTool.jar
 
 !src/leveldb*/Makefile
-!depends/Makefile
 
 /doc/doxygen/
 
 libuniqreditconsensus.pc
+contrib/devtools/split-debug.sh

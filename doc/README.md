@@ -11,16 +11,10 @@ The following are some helpful notes on how to run Uniqredit on your native plat
 
 ### Unix
 
-You need the Qt4 run-time libraries to run Uniqredit-Qt. On Debian or Ubuntu:
-
-	sudo apt-get install libqtgui4
-
 Unpack the files into a directory and run:
 
-- bin/32/uniqredit-qt (GUI, 32-bit) or bin/32/uniqreditd (headless, 32-bit)
-- bin/64/uniqredit-qt (GUI, 64-bit) or bin/64/uniqreditd (headless, 64-bit)
-
-
+- `bin/uniqredit-qt` (GUI) or
+- `bin/uniqreditd` (headless)
 
 ### Windows
 
@@ -63,6 +57,7 @@ The Uniqredit repo's [root README](/README.md) contains relevant information on 
 - [Shared Libraries](shared-libraries.md)
 - [BIPS](bips.md)
 - [Dnsseed Policy](dnsseed-policy.md)
+- [Benchmarking](benchmarking.md)
 
 ### Resources
 * Discuss on the [UniqreditTalk](https://uniqredittalk.org/) forums, in the [Development & Technical Discussion board](https://uniqredittalk.org/index.php?board=6.0).
