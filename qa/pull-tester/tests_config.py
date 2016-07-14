@@ -3,8 +3,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-SRCDIR="/home/minato/uniqredit"
-BUILDDIR="/home/minato/uniqredit"
+SRCDIR="/home/tlc/Desktop/uq1/uniqredit"
+BUILDDIR="/home/tlc/Desktop/uq1/uniqredit"
 EXEEXT=""
 
 # These will turn into comments if they were disabled when configuring.
